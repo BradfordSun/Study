@@ -12,6 +12,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer f.Close()
 	bs := make([]byte, 2)
 	for {
 		// Read最多读len(p)长度的字节，而不是一定读这么长。它返回的n是实际读了多长。
