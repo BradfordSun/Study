@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 )
 
 // 如果html网页的编码不是utf-8，可以使用charset.DetermineEncoding来判断下是什么类型，然后在main函数里用transform转换成utf8
@@ -37,5 +38,16 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%s\n", all)
+	printArticleList(all)
+	//fmt.Printf("%s\n", all)
+}
+
+// 点不用转义
+func printArticleList(contents []byte) {
+	re := regexp.MustCompile(`<a href="(/cn/premiumsupport/knowledge-center/[^"]+)"[^>]*>([^<]+)</a>`)
+	matches := re.FindAllSubmatch(contents, -1)
+	for _, m := range matches {
+		fmt.Printf("Title: %s, URL: %s\n", m[2], m[1])
+	}
+	fmt.Println(len(matches))
 }
