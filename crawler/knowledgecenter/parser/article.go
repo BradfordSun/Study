@@ -9,7 +9,7 @@ import (
 var updatedAtRe = regexp.MustCompile(`<i>上次更新日期：(.*)</i>`)
 var titleRe = regexp.MustCompile(`<h1.*>(.*)</h1>`)
 
-func parseArticle(contents []byte) engine.ParseResult {
+func ParseArticle(contents []byte) engine.ParseResult {
 	profile := model.Profile{}
 	profile.UpdatedAt = extractString(contents, updatedAtRe)
 	profile.Title = extractString(contents, titleRe)
