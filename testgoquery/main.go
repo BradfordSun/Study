@@ -5,6 +5,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func ExampleScrape() {
@@ -36,19 +37,25 @@ func ExampleScrape() {
 	// 7. simple-resource-record-route53-cli两个放到了一个p里。。导致下面的没有
 	// 8. /sns-sms-delivery-delays/重复的，同理
 	//9. security-network-acl-vpc-endpoint/五个在一个p，你敢信？导致下面直接少了4个
-	//doc.Find(".lb-col.lb-tiny-24.lb-mid-18 .lb-rtxt p a").Each(func(i int, s *goquery.Selection) {
-	//	// For each item found, get the title
-	//	url, _ := s.Attr("href")
-	//	fmt.Printf("%s\n", url)
-	//})
+	var testslice []string
+	doc.Find(".lb-col.lb-tiny-24.lb-mid-18 .lb-rtxt p a").Each(func(i int, s *goquery.Selection) {
+		// For each item found, get the title
+		url, _ := s.Attr("href")
+		if strings.HasPrefix(url, "/premiumsupport/knowledge-center/") || strings.HasPrefix(url, " https://aws.amazon.com/premiumsupport/knowledge-center/") {
+			testslice = append(testslice, url)
+		}
+		//fmt.Printf("%v\n", testslice)
+	})
+	fmt.Printf("%v\n", testslice)
+	fmt.Println(len(testslice))
 	// 这个只有2478 但英文版有2496
 
-	doc.Find(".lb-col.lb-tiny-24.lb-mid-18 .lb-rtxt p").Each(func(i int, s *goquery.Selection) {
-		// For each item found, get the title
-		//title := s.Find("a").Text()
-		url, _ := s.Find("a").Attr("href")
-		fmt.Printf("%s\n", url)
-	})
+	//doc.Find(".lb-col.lb-tiny-24.lb-mid-18 .lb-rtxt p").Each(func(i int, s *goquery.Selection) {
+	//	// For each item found, get the title
+	//	//title := s.Find("a").Text()
+	//	url, _ := s.Find("a").Attr("href")
+	//	fmt.Printf("%s\n", url)
+	//})
 }
 
 func main() {
