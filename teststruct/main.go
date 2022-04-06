@@ -1,15 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Student struct {
 	Name string
 	age  int
 }
 
+func (s *Student) WorkerChan() chan int {
+	return make(chan int)
+}
+
 type JustTest interface {
 	PrintName()
 	ChangeAge()
+	WorkerChan() chan int
 }
 
 func (s *Student) PrintName() {
@@ -21,6 +28,11 @@ func (s *Student) ChangeAge() {
 	fmt.Println(s.age)
 }
 
+func test(in chan int) {
+	aaa := <-in
+	fmt.Println(aaa)
+}
+
 func main() {
 	ztt := &Student{
 		Name: "zhangtingting",
@@ -28,6 +40,6 @@ func main() {
 	}
 	var justtest JustTest = ztt
 	justtest.ChangeAge()
-	fmt.Println(*ztt)
 	justtest.PrintName()
+	test(ztt.WorkerChan())
 }
